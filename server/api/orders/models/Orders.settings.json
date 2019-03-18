@@ -1,0 +1,40 @@
+{
+  "connection": "default",
+  "collectionName": "orders",
+  "info": {
+    "name": "orders",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "address": {
+      "default": "",
+      "type": "string",
+      "required": true
+    },
+    "postalCode": {
+      "default": "",
+      "type": "string",
+      "required": true
+    },
+    "city": {
+      "default": "",
+      "type": "string",
+      "required": true
+    },
+    "brews": {
+      "default": "",
+      "type": "json",
+      "required": true
+    },
+    "amount": {
+      "default": "",
+      "type": "decimal",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,396 @@
+type Brand {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  name: String
+  description: String
+  image: UploadFile
+  brews(sort: String, limit: Int, start: Int, where: JSON): [Brew]
+}
+
+input BrandInput {
+  name: String
+  description: String
+  image: ID
+  brews: [ID]
+}
+
+type Brew {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  name: String
+  description: String
+  image: UploadFile
+  price: Float
+  brand: Brand
+}
+
+input BrewInput {
+  name: String
+  description: String
+  image: ID
+  price: Float
+  brand: ID
+}
+
+input createBrandInput {
+  data: BrandInput
+}
+
+type createBrandPayload {
+  brand: Brand
+}
+
+input createBrewInput {
+  data: BrewInput
+}
+
+type createBrewPayload {
+  brew: Brew
+}
+
+input createOrdersInput {
+  data: OrdersInput
+}
+
+type createOrdersPayload {
+  order: Orders
+}
+
+input createRoleInput {
+  data: RoleInput
+}
+
+type createRolePayload {
+  role: UsersPermissionsRole
+}
+
+input createUserInput {
+  data: UserInput
+}
+
+type createUserPayload {
+  user: UsersPermissionsUser
+}
+
+"""
+The `DateTime` scalar represents a date and time following the ISO 8601 standard
+"""
+scalar DateTime
+
+input deleteBrandInput {
+  where: InputID
+}
+
+type deleteBrandPayload {
+  brand: Brand
+}
+
+input deleteBrewInput {
+  where: InputID
+}
+
+type deleteBrewPayload {
+  brew: Brew
+}
+
+input deleteOrdersInput {
+  where: InputID
+}
+
+type deleteOrdersPayload {
+  order: Orders
+}
+
+input deleteRoleInput {
+  where: InputID
+}
+
+type deleteRolePayload {
+  role: UsersPermissionsRole
+}
+
+input deleteUserInput {
+  where: InputID
+}
+
+type deleteUserPayload {
+  user: UsersPermissionsUser
+}
+
+input editBrandInput {
+  name: String
+  description: String
+  image: ID
+  brews: [ID]
+}
+
+input editBrewInput {
+  name: String
+  description: String
+  image: ID
+  price: Float
+  brand: ID
+}
+
+input editFileInput {
+  name: String
+  hash: String
+  sha256: String
+  ext: String
+  mime: String
+  size: String
+  url: String
+  provider: String
+  public_id: String
+  related: [ID]
+}
+
+input editOrdersInput {
+  address: String
+  postalCode: String
+  city: String
+  brews: JSON
+  amount: Float
+}
+
+input editRoleInput {
+  name: String
+  description: String
+  type: String
+  permissions: [ID]
+  users: [ID]
+}
+
+input editUserInput {
+  username: String
+  email: String
+  provider: String
+  password: String
+  resetPasswordToken: String
+  confirmed: Boolean
+  blocked: Boolean
+  role: ID
+}
+
+input FileInput {
+  name: String!
+  hash: String!
+  sha256: String
+  ext: String
+  mime: String!
+  size: String!
+  url: String!
+  provider: String!
+  public_id: String
+  related: [ID]
+}
+
+input InputID {
+  id: ID!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+union Morph = UsersPermissionsMe | UsersPermissionsMeRole | Brand | createBrandPayload | updateBrandPayload | deleteBrandPayload | Brew | createBrewPayload | updateBrewPayload | deleteBrewPayload | Orders | createOrdersPayload | updateOrdersPayload | deleteOrdersPayload | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload
+
+type Mutation {
+  createBrand(input: createBrandInput): createBrandPayload
+  updateBrand(input: updateBrandInput): updateBrandPayload
+  deleteBrand(input: deleteBrandInput): deleteBrandPayload
+  createBrew(input: createBrewInput): createBrewPayload
+  updateBrew(input: updateBrewInput): updateBrewPayload
+  deleteBrew(input: deleteBrewInput): deleteBrewPayload
+  createOrders(input: createOrdersInput): createOrdersPayload
+  updateOrders(input: updateOrdersInput): updateOrdersPayload
+  deleteOrders(input: deleteOrdersInput): deleteOrdersPayload
+
+  """Create a new role"""
+  createRole(input: createRoleInput): createRolePayload
+
+  """Update an existing role"""
+  updateRole(input: updateRoleInput): updateRolePayload
+
+  """Delete an existing role"""
+  deleteRole(input: deleteRoleInput): deleteRolePayload
+
+  """Create a new user"""
+  createUser(input: createUserInput): createUserPayload
+
+  """Update an existing user"""
+  updateUser(input: updateUserInput): updateUserPayload
+
+  """Delete an existing user"""
+  deleteUser(input: deleteUserInput): deleteUserPayload
+  upload(refId: ID, ref: String, source: String, file: Upload!): UploadFile!
+}
+
+type Orders {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  address: String!
+  postalCode: String!
+  city: String!
+  brews: JSON!
+  amount: Float!
+}
+
+input OrdersInput {
+  address: String!
+  postalCode: String!
+  city: String!
+  brews: JSON!
+  amount: Float!
+}
+
+type Query {
+  brand(id: ID!): Brand
+  brands(sort: String, limit: Int, start: Int, where: JSON): [Brand]
+  brew(id: ID!): Brew
+  brews(sort: String, limit: Int, start: Int, where: JSON): [Brew]
+  order(id: ID!): Orders
+  orders(sort: String, limit: Int, start: Int, where: JSON): [Orders]
+  files(sort: String, limit: Int, start: Int, where: JSON): [UploadFile]
+  role(id: ID!): UsersPermissionsRole
+
+  """
+  Retrieve all the existing roles. You can't apply filters on this query.
+  """
+  roles(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsRole]
+  user(id: ID!): UsersPermissionsUser
+  users(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsUser]
+  me: UsersPermissionsMe
+}
+
+input RoleInput {
+  name: String!
+  description: String
+  type: String
+  permissions: [ID]
+  users: [ID]
+}
+
+input updateBrandInput {
+  where: InputID
+  data: editBrandInput
+}
+
+type updateBrandPayload {
+  brand: Brand
+}
+
+input updateBrewInput {
+  where: InputID
+  data: editBrewInput
+}
+
+type updateBrewPayload {
+  brew: Brew
+}
+
+input updateOrdersInput {
+  where: InputID
+  data: editOrdersInput
+}
+
+type updateOrdersPayload {
+  order: Orders
+}
+
+input updateRoleInput {
+  where: InputID
+  data: editRoleInput
+}
+
+type updateRolePayload {
+  role: UsersPermissionsRole
+}
+
+input updateUserInput {
+  where: InputID
+  data: editUserInput
+}
+
+type updateUserPayload {
+  user: UsersPermissionsUser
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UploadFile {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  name: String!
+  hash: String!
+  sha256: String
+  ext: String
+  mime: String!
+  size: String!
+  url: String!
+  provider: String!
+  public_id: String
+  related(sort: String, limit: Int, start: Int, where: JSON): [Morph]
+}
+
+input UserInput {
+  username: String!
+  email: String!
+  provider: String
+  password: String
+  resetPasswordToken: String
+  confirmed: Boolean
+  blocked: Boolean
+  role: ID
+}
+
+type UsersPermissionsMe {
+  _id: ID!
+  username: String!
+  email: String!
+  confirmed: Boolean
+  blocked: Boolean
+  role: UsersPermissionsMeRole
+}
+
+type UsersPermissionsMeRole {
+  _id: ID!
+  name: String!
+  description: String
+  type: String
+}
+
+type UsersPermissionsPermission {
+  id: ID!
+  type: String!
+  controller: String!
+  action: String!
+  enabled: Boolean!
+  policy: String
+  role: UsersPermissionsRole
+}
+
+type UsersPermissionsRole {
+  id: ID!
+  name: String!
+  description: String
+  type: String
+  permissions(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsPermission]
+  users(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsUser]
+}
+
+type UsersPermissionsUser {
+  id: ID!
+  username: String!
+  email: String!
+  provider: String
+  confirmed: Boolean
+  blocked: Boolean
+  role: UsersPermissionsRole
+}
